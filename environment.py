@@ -1,0 +1,1 @@
+HASHES_FILE_NAME = "hashes.pkl"
