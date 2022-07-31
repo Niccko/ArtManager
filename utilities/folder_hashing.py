@@ -1,7 +1,6 @@
 from utils import *
 import pickle
 import os
-from pprint import pprint
 from environment import HASHES_FILE_NAME
 
 
@@ -16,12 +15,10 @@ class folder_hashing:
             raise Exception("Observable path is not specified.")
         files = list_subdir(self.path)
         for i,x in enumerate(files):
-            if rescan and x in self.hashes.values():
+            if rescan or x not in self.hashes.values():
                 if is_image(x):
                     hash = compute_hash(x)
                     self.hashes[hash] = [x]
-                    os.system("cls")
-                print({i})
         self.save_hashes(os.path.join(self.path, HASHES_FILE_NAME))
     
     def save_hashes(self, path):
@@ -30,7 +27,7 @@ class folder_hashing:
 
     def load_hashes(self, path = None):
         filepath = os.path.join(self.path, HASHES_FILE_NAME)
-        if os.path.isfile(filepath):
+        if os.path.exists(filepath):
             with open(filepath, 'rb') as f:
                 self.hashes = pickle.load(f)
         else:
@@ -57,13 +54,3 @@ class folder_hashing:
                         "source": compare
                     })
         return collisions
-
-def main():
-    path = "D:\\hen"
-    folder = "C:\\Users\\radko\\Desktop\\test"
-    hashing = folder_hashing(path = path)
-    
-    
-
-if __name__ == "__main__":
-    main()
