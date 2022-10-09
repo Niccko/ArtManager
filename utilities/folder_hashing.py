@@ -2,34 +2,39 @@ from utils import *
 import pickle
 import os
 from environment import HASHES_FILE_NAME
+from utilities.meta_handler import *
 
 
 class folder_hashing:
     def __init__(self, path = None) -> None:
         self.path = path
         self.hashes = {}
+        self.files = []
     
     def invalidate_hashes(self, rescan = False, path = None):
         self.path = path if path else self.path
         if not self.path:
             raise Exception("Observable path is not specified.")
+        existing = list(map(lambda f: f.path, sum(self.hashes.values(), [])))
         files = list_subdir(self.path)
-        for i,x in enumerate(files):
-            if rescan or x not in self.hashes.values():
-                if is_image(x):
+        for i, x in enumerate(files):
+            fileElem = loadElement(x)
+            if fileElem.type == ElementType.image:
+                if x not in existing:
                     hash = compute_hash(x)
-                    self.hashes[hash] = [x]
+                    if not hash in self.hashes:
+                        self.hashes[hash] = []
+                    self.hashes[hash].append(fileElem)
+                
         self.save_hashes(os.path.join(self.path, HASHES_FILE_NAME))
     
     def save_hashes(self, path):
-        with open(path, 'wb') as f:
-            pickle.dump(self.hashes, f)
+        savePickle(path, self.hashes)
 
     def load_hashes(self, path = None):
         filepath = os.path.join(self.path, HASHES_FILE_NAME)
         if os.path.exists(filepath):
-            with open(filepath, 'rb') as f:
-                self.hashes = pickle.load(f)
+            self.hashes = loadPickle(filepath)
         else:
             self.invalidate_hashes()
 
@@ -50,7 +55,7 @@ class folder_hashing:
                 compare = self.find_image(file)
                 if compare:
                     collisions.append({
-                        "target": file,
-                        "source": compare
+                        "target": compare,
+                        "source": file
                     })
         return collisions

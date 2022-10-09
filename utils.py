@@ -18,7 +18,7 @@ def list_subdir(root):
     files_list = []
     for root_path, dirs, files in os.walk(root):
         for file in files:
-            files_list.append(os.path.join(root,file))
+            files_list.append(os.path.join(root_path,file))
     return files_list
 
 def remove_prefix(text, prefix):
@@ -30,7 +30,10 @@ def uniquify_filename(path):
     filename, extension = os.path.splitext(path)
     counter = 1
     while os.path.exists(path):
-        path = filename + " (" + str(counter) + ")" + extension
+        path = filename + "(" + str(counter) + ")" + extension
         counter += 1
-
     return path
+
+def file_in_folder(folder, file):
+    files = [os.path.basename(f) for f in os.listdir(folder)]
+    return file in files

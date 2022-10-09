@@ -7,36 +7,31 @@ from shutil import move
 import utils
 
 class date_group:
-    def __init__(self, path, target = None, affect_folders = False) -> None:
-        self.path = path
-        self.affect_folders = affect_folders
-        self.dates = {}
-        self.target = target
+    def __init__(self) -> None:
+        pass
+
+    def execute(self, path, target = None, affect_partitions = False, affect_folders = False):
+        self._group(path, target, affect_partitions, affect_folders)
+
+    def _group(self, path, target = None, affect_partitions = False,affect_folders = False):
+        elements = os.listdir(path)
         if not target:
-            self.target = path
+            target = path
 
-    def execute(self):
-        self._group(self.path)
-
-    def _group(self, path = None):
-        files = os.listdir(path)
-        for file in files:
-            file_path = os.path.join(path, file)
-            if os.path.isdir(file_path) and self.affect_folders:
-                print(f"Grouping folder {file_path}")
-                self._group(file_path)
-                #TODO Сделать расфасовку папок
-                pass
-            elif os.path.isfile(file_path):
-                unix_date = os.path.getmtime(file_path)
+        for elem in elements:
+            elem_path = os.path.join(path, elem)
+            if os.path.isdir(elem_path):
+                is_partition = elem.startswith(PARTITION_PREFIX)
+                if affect_partitions and is_partition or affect_folders and not is_partition:
+                    self._group(elem_path, target)
+                
+            elif os.path.isfile(elem_path):
+                unix_date = os.path.getmtime(elem_path)
                 date = dt.utcfromtimestamp(unix_date).strftime('%Y-%m')
-                if not self.dates.get(date):
-                    self.dates[date] = 1
-                    dir_path = os.path.join(self.target, PARTITION_PREFIX+date)
-                    if not os.path.exists(dir_path):
-                        os.makedirs(dir_path)
-                else:
-                    self.dates[date] += 1
-                move(file_path, os.path.join(self.target, PARTITION_PREFIX+date, utils.uniquify_filename(file)))
-
+                dir_path = os.path.join(target, PARTITION_PREFIX+date)
+                if not  os.path.exists(dir_path):
+                    os.makedirs(dir_path)
+                elem_target = os.path.join(target, PARTITION_PREFIX+date, elem)
+                elem_target = utils.uniquify_filename(elem_target)
+                move(elem_path, elem_target)
 

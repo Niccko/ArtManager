@@ -1,14 +1,18 @@
 from dataclasses import dataclass
 import os, pickle
+from enum import Enum
+from environment import COMIX_META_NAME, LIB_META_NAME
+
+from utils import file_in_folder
 
 class file_manager:
     def __init__():
         pass
 
+    
+
     def read_meta(path):
         pass
-
-    
 
     def generate_meta(dir_props):
         for path in dir_props:
@@ -22,18 +26,5 @@ class file_manager:
             if element.type == "dir":
                 with(os.path.join(element.path, "_meta.pkl")) as p:
                     bin = pickle.dumps(element)
-                    p.write(bin)
-        
+                    p.write(bin) 
 
-
-    
-
-@dataclass
-class element:
-    is_folder: bool
-    is_comix: bool
-    type: str
-    path: str
-    tags: list[str]
-
-print(os.path.splitext("path")[1])
