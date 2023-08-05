@@ -1,7 +1,12 @@
 import imagehash, os
+from diffimg import diff
 
 def is_image(path):
     return path.split(".")[-1] in ("jpeg", "jpg", "rgb", "gif", "pbm","pgm", "ppm", "tif", "rast", "xbm", "bmp", "png")
+
+def is_video(path):
+    return path.split(".")[-1] in ("mp4")
+
 
 def compute_hash(path):
     try:
@@ -37,3 +42,11 @@ def uniquify_filename(path):
 def file_in_folder(folder, file):
     files = [os.path.basename(f) for f in os.listdir(folder)]
     return file in files
+
+def calculate_similarity(paths):
+        diffs = []
+        for i in range(len(paths)):
+            for j in range(i + 1, len(paths)):
+                im_diff = diff(paths[i], paths[j], delete_diff_file=True)
+                diffs.append([paths[i], paths[j], im_diff])
+        return diffs

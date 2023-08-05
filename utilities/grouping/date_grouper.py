@@ -28,10 +28,10 @@ class date_group:
             elif os.path.isfile(elem_path):
                 unix_date = os.path.getmtime(elem_path)
                 date = dt.utcfromtimestamp(unix_date).strftime('%Y-%m')
-                dir_path = os.path.join(target, PARTITION_PREFIX+date)
+                dir_path = os.path.join(target, date)
                 if not  os.path.exists(dir_path):
                     os.makedirs(dir_path)
-                elem_target = os.path.join(target, PARTITION_PREFIX+date, elem)
+                elem_target = os.path.join(target, date, elem)
                 elem_target = utils.uniquify_filename(elem_target)
                 move(elem_path, elem_target)
 

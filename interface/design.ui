@@ -6,407 +6,324 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>700</height>
+    <width>1150</width>
+    <height>576</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>900</width>
-    <height>700</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>900</width>
-    <height>700</height>
-   </size>
-  </property>
-  <property name="font">
-   <font>
-    <family>Myanmar Text</family>
-   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true"/>
-  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QFrame" name="frame">
+   <widget class="QFrame" name="gridFrame">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>180</y>
-      <width>901</width>
-      <height>25</height>
+      <x>10</x>
+      <y>10</y>
+      <width>361</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMaximumSize</enum>
+     </property>
+     <item row="3" column="0">
+      <widget class="QTextEdit" name="txt_target_path"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Target folder</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QTextEdit" name="txt_source_path">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Source folder</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="btn_source_path">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="btn_target_path">
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>241</width>
+      <height>371</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Source</string>
+     </attribute>
+     <widget class="QListWidget" name="lst_doubles_src">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>231</width>
+        <height>341</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Target</string>
+     </attribute>
+     <widget class="QListWidget" name="lst_doubles_trg">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>231</width>
+        <height>341</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>140</y>
+      <width>351</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QFrame" name="gridFrame">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>30</y>
+      <width>141</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="0">
+      <widget class="QPushButton" name="btn_compute_source">
+       <property name="text">
+        <string>Compute source hashes</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="btn_compute_target">
+       <property name="text">
+        <string>Compute target hashes</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="btn_compare">
+       <property name="text">
+        <string>Compare folders</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="lbl_status">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>140</y>
+      <width>331</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: rgb(255, 255, 255)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_src_meta_status">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>30</y>
+      <width>81</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: #474747;
-</string>
+     <string notr="true">background: rgb(255, 255, 255)</string>
     </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+    <property name="text">
+     <string/>
     </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QFrame" name="frame_2">
+   <widget class="QLabel" name="lbl_trg_meta_status">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>931</width>
-      <height>731</height>
+      <x>620</x>
+      <y>30</y>
+      <width>81</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: #2f2f2f;</string>
+     <string notr="true">background: rgb(255, 255, 255)</string>
     </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
+    <property name="text">
+     <string/>
     </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
-    <widget class="QLabel" name="lblPath">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>221</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Inter</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: white;
-background-color: transparent;</string>
-     </property>
-     <property name="text">
-      <string>Path: *</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lblLastValidation">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>221</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Inter</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: white;
-background-color: transparent;</string>
-     </property>
-     <property name="text">
-      <string>Last validation: *</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnInvalidate">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>70</y>
-       <width>221</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Inter</family>
-       <pointsize>9</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: #1f1f1f;
-color: white;
-border-radius: 3px;</string>
-     </property>
-     <property name="text">
-      <string>Invalidate</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lblCurrentGrouping">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>100</y>
-       <width>171</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Inter</family>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">color: white;
-background-color: transparent;</string>
-     </property>
-     <property name="text">
-      <string>Grouping: date</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="menuGrouping">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>130</y>
-       <width>181</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: #1f1f1f;
-border: 2px solid darkgray;
-selection-background-color: lightgray;</string>
-     </property>
-    </widget>
-    <widget class="QFrame" name="frame">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>241</width>
-       <height>161</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: #474747;
-</string>
-     </property>
-     <widget class="QPushButton" name="btnConfirmGrouping">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>120</y>
-        <width>31</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Inter</family>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #1f1f1f;
-color: green;
-border-radius: 3px;</string>
-      </property>
-      <property name="text">
-       <string>Ok</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QFrame" name="frame_3">
-     <property name="geometry">
-      <rect>
-       <x>260</x>
-       <y>10</y>
-       <width>381</width>
-       <height>161</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: #474747;</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <widget class="QPushButton" name="btnCheckCorrupted">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Inter</family>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #1f1f1f;
-color: white;
-border-radius: 3px;</string>
-      </property>
-      <property name="text">
-       <string>Check corrupted files</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lblCorrupted">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>10</y>
-        <width>171</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Inter</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: white;
-background-color: transparent;</string>
-      </property>
-      <property name="text">
-       <string>Found * corrupted files</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btnChooseSource">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>131</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Inter</family>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #1f1f1f;
-color: white;
-border-radius: 3px;</string>
-      </property>
-      <property name="text">
-       <string>Choose source</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="lblSource">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>40</y>
-        <width>221</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Inter</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: white;
-background-color: transparent;</string>
-      </property>
-      <property name="text">
-       <string>Source path: *</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="btnLoad">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>70</y>
-        <width>361</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Inter</family>
-        <pointsize>9</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: #1f1f1f;
-color: white;
-border-radius: 3px;</string>
-      </property>
-      <property name="text">
-       <string>Load</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QFrame" name="frame_4">
-     <property name="geometry">
-      <rect>
-       <x>650</x>
-       <y>10</y>
-       <width>241</width>
-       <height>161</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: #474747;
-</string>
-     </property>
-    </widget>
-    <zorder>frame</zorder>
-    <zorder>lblPath</zorder>
-    <zorder>lblLastValidation</zorder>
-    <zorder>btnInvalidate</zorder>
-    <zorder>lblCurrentGrouping</zorder>
-    <zorder>menuGrouping</zorder>
-    <zorder>frame_3</zorder>
-    <zorder>frame_4</zorder>
    </widget>
-   <zorder>frame_2</zorder>
-   <zorder>frame</zorder>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>536</x>
+      <y>10</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Source meta</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>625</x>
+      <y>10</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Target meta</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>10</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hashing</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_image">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>10</y>
+      <width>411</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: rgb(255, 255, 255)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tbl_doubles_info">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>192</y>
+      <width>471</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>471</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>234</number>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>Path</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Resolution</string>
+     </property>
+    </column>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>900</width>
+     <width>1150</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionSelect_folder"/>
-   </widget>
-   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionSelect_folder">
-   <property name="text">
-    <string>Select folder</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>
