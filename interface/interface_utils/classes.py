@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QRunnable, pyqtSignal, pyqtSlot, QObject
 from functools import partial
 
+
 class Runnable(QRunnable):
     def __init__(self, task, **kwargs):
         super().__init__()
@@ -9,6 +10,7 @@ class Runnable(QRunnable):
 
     def run(self):
         self.task(**self.kwargs)
+
 
 class PercentageWorker(QObject):
     started = pyqtSignal()
@@ -24,12 +26,10 @@ class PercentageWorker(QObject):
             self._percentage += other
             self.percentageChanged.emit(int(self._percentage))
             return self
-        
 
     def __lt__(self, other):
         if isinstance(other, float):
             return self._percentage < other
-        
 
     def start_task(self, callback):
         self._percentage = 0

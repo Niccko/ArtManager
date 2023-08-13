@@ -1,15 +1,16 @@
-import sys  
+import sys
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import QRunnable, QThreadPool, Qt, QTimer, pyqtSignal, pyqtSlot, QObject
+from PyQt5.QtWidgets import QFileDialog, QListWidgetItem
+from PyQt5.QtCore import QThreadPool, Qt
 from PyQt5.QtGui import QPixmap
 import interface.design as design
 from utilities.folder_hashing import folder_hashing
 from interface.interface_utils import Runnable, PercentageWorker
-import os
 from utils import *
 from environment import *
 from pprint import pprint
+from dto import UiElement
+
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __init__(self):
@@ -19,11 +20,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.doubles_index = -1
         self.btn_source_path.clicked.connect(lambda: self.set_folder_path("source"))
         self.btn_target_path.clicked.connect(lambda: self.set_folder_path("target"))
-        self.btn_compute_source.clicked.connect(lambda: self.run_task(self.compute_hashes, path_type = "source"))
-        self.btn_compute_target.clicked.connect(lambda: self.run_task(self.compute_hashes, path_type = "target"))
+        self.btn_compute_source.clicked.connect(lambda: self.run_task(self.compute_hashes, path_type="source"))
+        self.btn_compute_target.clicked.connect(lambda: self.run_task(self.compute_hashes, path_type="target"))
         self.lst_doubles_src.currentRowChanged.connect(self.__get_double_info)
         self.lst_doubles_trg.currentRowChanged.connect(self.__get_double_info)
-        self.tbl_doubles_info.currentItemChanged.connect(self.__update_image)
+        self.lst_doubles_info.currentItemChanged.connect(self.__update_image)
+        self.lst_doubles_info.itemChanged.connect(self.update_marked)
+        self.btn_delete_marked.clicked.connect(self.delete_marked)
 
         self.percentage_worker = PercentageWorker()
         self.percentage_worker.percentageChanged.connect(self.progressBar.setValue)
@@ -33,12 +36,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.DirectoryOnly)
         dialog.setViewMode(QFileDialog.ViewMode.List)
+
         if dialog.exec():
             folders = dialog.selectedFiles()
             if folders:
                 container.setText(folders[0])
-            self.run_task(self.__update_meta_info, path_type = container_type)
-        
+            self.run_task(self.__update_meta_info, path_type=container_type)
+
     def __update_meta_info(self, path_type):
         self.lbl_status.setText(f"Loading {path_type} meta")
         path = self.txt_source_path.toPlainText() if path_type.lower() == "source" else self.txt_target_path.toPlainText()
@@ -49,11 +53,19 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             return
         meta_container.setText(f"Meta info\nCount: {len(hashes)}")
 
-        doubles_lst = self.lst_doubles_src if path_type.lower() == "source" else self.lst_doubles_trg
-        doubles_lst.clear()
-        self.doubles_list = [x for x in hashes.values() if len(x)>1]
-        doubles_lst.addItems([str(x) for x in self.doubles_list])
+        self.doubles_list = []
+        for i in hashes.values():
+            if len(i) < 2:
+                continue
+            self.doubles_list.append([UiElement(x, Qt.Unchecked) for x in i])
+        self.__update_meta_ui_info()
         self.lbl_status.setText("")
+        self.__mark_full_doubles()
+
+    def __update_meta_ui_info(self):
+        doubles_lst = self.lst_doubles_src
+        doubles_lst.clear()
+        doubles_lst.addItems([str(x[0].obj.name) for x in self.doubles_list])
 
     def keyPressEvent(self, e):
         # отработать символ внутри поля ввода
@@ -64,38 +76,45 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
             return
         os.remove(selected_file.text())
         self.__get_double_info(self.doubles_index)
-        
-        
-    def __delete_doubles(self):
-        comp_doubles = []
 
+    def __mark_full_doubles(self):
         for i in self.doubles_list:
-            sim_list = calculate_similarity([x.path for x in i])
-            for j in sim_list:
-                if j[2] < SIMILARITY_THRESHOLD and j[0] not in comp_doubles:
-                    comp_doubles.append(j[0])
-        pprint(comp_doubles)
+            sim_list = calculate_similarity([x.obj.path for x in i])
+            for j in range(len(sim_list)):
+                if sim_list[j][2] < SIMILARITY_THRESHOLD:
+                    i[j].checked = Qt.Checked
+        self.__update_meta_ui_info()
 
     def __get_double_info(self, item_index):
         self.doubles_index = item_index
-        self.tbl_doubles_info.setRowCount(0)
+        self.lst_doubles_info.clear()
         ind = 0
         if len(self.doubles_list) < item_index - 1:
             return
         for file in self.doubles_list[item_index]:
-            if not os.path.exists(file.path):
+            if not os.path.exists(file.obj.path):
                 continue
-            self.tbl_doubles_info.insertRow(ind)
-            self.tbl_doubles_info.setItem(ind, 0, QtWidgets.QTableWidgetItem(file.path))
-            self.tbl_doubles_info.setItem(ind, 1, QtWidgets.QTableWidgetItem(f"{file.res[0]}x{file.res[1]}"))
-            ind+=1
+            table_item = QListWidgetItem(file.obj.path)
+            table_item.setFlags(table_item.flags() | Qt.ItemIsUserCheckable)
+            table_item.setCheckState(file.checked)
+            self.lst_doubles_info.addItem(table_item)
+            ind += 1
+
+    def update_marked(self, item: QListWidgetItem):
+        self.doubles_list[self.doubles_index][self.lst_doubles_src.row(item)].checked = item.checkState() == Qt.Checked
 
     def __update_image(self, item):
         if not item:
             return
-        pxp = QPixmap(item.text()).scaled(self.lbl_image.width(), self.lbl_image.height(), aspectRatioMode=Qt.KeepAspectRatio)
+        pxp = QPixmap(item.text()).scaled(self.lbl_image.width(), self.lbl_image.height(),
+                                          aspectRatioMode=Qt.KeepAspectRatio)
         self.lbl_image.setPixmap(pxp)
 
+    def delete_marked(self):
+        for i in self.doubles_list:
+            for j in i:
+                if j.checked:
+                    os.remove(j.obj.path)
 
     def compute_hashes(self, path_type):
         self.lbl_status.setText(f"Updating {path_type}")
@@ -113,13 +132,13 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
         runnable = Runnable(task, **kwargs)
         pool.start(runnable)
 
-     
 
 def main():
-    app = QtWidgets.QApplication(sys.argv)  
-    window = ExampleApp()  
-    window.show()  
-    app.exec_()  
+    app = QtWidgets.QApplication(sys.argv)
+    window = ExampleApp()
+    window.show()
+    app.exec_()
 
-if __name__ == '__main__':  
-    main() 
+
+if __name__ == '__main__':
+    main()
